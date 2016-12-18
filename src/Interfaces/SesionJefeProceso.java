@@ -194,6 +194,7 @@ public class SesionJefeProceso {
 		panel_3.add(label_6);
 		
 		textField_4 = new JTextField();
+		textField_4.setEnabled(false);
 		textField_4.setBounds(170, 40, 118, 22);
 		panel_3.add(textField_4);
 		
@@ -214,11 +215,13 @@ public class SesionJefeProceso {
 		panel_4.setLayout(null);
 		
 		textFieldTecnicos = new JTextField();
+		textFieldTecnicos.setEnabled(false);
 		textFieldTecnicos.setColumns(10);
 		textFieldTecnicos.setBounds(170, 43, 124, 22);
 		panel_4.add(textFieldTecnicos);
 		
 		JButton button = new JButton("Empezar");
+		button.setEnabled(false);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object> capacidad = new ArrayList<Object>();
@@ -265,6 +268,7 @@ public class SesionJefeProceso {
 		panel_7.setLayout(null);
 		
 		JButton button_3 = new JButton("Empezar");
+		button_3.setEnabled(false);
 		button_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object> capacidad = new ArrayList<Object>();
@@ -294,6 +298,7 @@ public class SesionJefeProceso {
 		panel_7.add(label_8);
 		
 		textFieldControladores = new JTextField();
+		textFieldControladores.setEnabled(false);
 		textFieldControladores.setColumns(10);
 		textFieldControladores.setBounds(163, 41, 124, 22);
 		panel_7.add(textFieldControladores);
@@ -324,6 +329,7 @@ public class SesionJefeProceso {
 		panel_6.setLayout(null);
 		
 		JButton button_2 = new JButton("Empezar");
+		button_2.setEnabled(false);
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object> capacidad = new ArrayList<Object>();
@@ -353,6 +359,7 @@ public class SesionJefeProceso {
 		panel_6.add(label);
 		
 		textField_1 = new JTextField();
+		textField_1.setEnabled(false);
 		textField_1.setBounds(229, 18, 118, 22);
 		panel_6.add(textField_1);
 		
@@ -373,6 +380,7 @@ public class SesionJefeProceso {
 		panel_5.setLayout(null);
 		
 		JButton button_1 = new JButton("Empezar");
+		button_1.setEnabled(false);
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object> capacidad = new ArrayList<Object>();
@@ -423,6 +431,7 @@ public class SesionJefeProceso {
 		panel_8.setLayout(null);
 		
 		JButton button_4 = new JButton("Empezar");
+		button_4.setEnabled(false);
 		button_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object> capacidad = new ArrayList<Object>();
@@ -452,6 +461,7 @@ public class SesionJefeProceso {
 		panel_8.add(label_1);
 		
 		textField_2 = new JTextField();
+		textField_2.setEnabled(false);
 		textField_2.setBounds(229, 18, 118, 22);
 		panel_8.add(textField_2);
 		
@@ -473,6 +483,7 @@ public class SesionJefeProceso {
 		panel_9.setLayout(null);
 		
 		JButton button_5 = new JButton("Empezar");
+		button_5.setEnabled(false);
 		button_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object> capacidad = new ArrayList<Object>();
@@ -502,8 +513,32 @@ public class SesionJefeProceso {
 		panel_9.add(label_2);
 		
 		textField_3 = new JTextField();
+		textField_3.setEnabled(false);
 		textField_3.setBounds(229, 18, 118, 22);
 		panel_9.add(textField_3);
+		
+		JButton btnNewButton = new JButton("Empezar");
+		btnNewButton.setEnabled(false);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Conexion conn = new Conexion();
+				conn.crearCabezera(
+						Integer.parseInt(comboBox_1.getSelectedItem().toString()),
+						comboBox.getSelectedItem().toString(),
+						Integer.parseInt(spinner.getValue().toString())
+						);
+				comboBox.setEnabled(false);
+				comboBox_1.setEnabled(false);
+				spinner.setEnabled(false);
+				DefinirAreas definirAreas = new DefinirAreas(Integer.parseInt(textField_4.getText()));
+				definirAreas.frame.setVisible(true);
+				Main.centralizar(definirAreas.frame);
+			}
+		});
+		btnNewButton.setForeground(Color.WHITE);
+		btnNewButton.setBackground(new Color(77, 1, 33));
+		btnNewButton.setBounds(170, 77, 118, 22);
+		panel_3.add(btnNewButton);
 		
 		JLabel label_5 = new JLabel("New label");
 		label_5.setBounds(20, 15, 95, 60);
@@ -529,6 +564,21 @@ public class SesionJefeProceso {
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (comboBox.getSelectedItem().equals("EXTRAORDINARIO")) {
+					textField_4.setEnabled(true);
+					textFieldTecnicos.setEnabled(true);
+					textFieldControladores.setEnabled(true);
+					textField.setEnabled(true);
+					textField_1.setEnabled(true);
+					textField_2.setEnabled(true);
+					textField_3.setEnabled(true);
+					btnNewButton.setEnabled(true);
+					button.setEnabled(true);
+					button_3.setEnabled(true);
+					button_1.setEnabled(true);
+					button_2.setEnabled(true);
+					button_4.setEnabled(true);
+					button_5.setEnabled(true);
+					
 					comboBox_1.setEnabled(true);
 					comboBox_1.removeAllItems();
 					comboBox_1.addItem("1");
@@ -540,6 +590,20 @@ public class SesionJefeProceso {
 					textField_2.setText("8");
 					textField_3.setText("8");
 				} else if (comboBox.getSelectedItem().equals("CEPREUNSA")) {
+					textField_4.setEnabled(true);
+					textFieldTecnicos.setEnabled(true);
+					textFieldControladores.setEnabled(true);
+					textField.setEnabled(true);
+					textField_1.setEnabled(true);
+					textField_2.setEnabled(true);
+					textField_3.setEnabled(true);
+					btnNewButton.setEnabled(true);
+					button.setEnabled(true);
+					button_3.setEnabled(true);
+					button_1.setEnabled(true);
+					button_2.setEnabled(true);
+					button_4.setEnabled(true);
+					button_5.setEnabled(true);
 					comboBox_1.setEnabled(true);
 					comboBox_1.removeAllItems();
 					comboBox_1.addItem("1");
@@ -553,6 +617,20 @@ public class SesionJefeProceso {
 					textField_2.setText("12");
 					textField_3.setText("8");
 				} else if (comboBox.getSelectedItem().equals("ORDINARIO")) {
+					textField_4.setEnabled(true);
+					textFieldTecnicos.setEnabled(true);
+					textFieldControladores.setEnabled(true);
+					textField.setEnabled(true);
+					textField_1.setEnabled(true);
+					textField_2.setEnabled(true);
+					textField_3.setEnabled(true);
+					btnNewButton.setEnabled(true);
+					button.setEnabled(true);
+					button_3.setEnabled(true);
+					button_1.setEnabled(true);
+					button_2.setEnabled(true);
+					button_4.setEnabled(true);
+					button_5.setEnabled(true);
 					comboBox_1.setEnabled(true);
 					comboBox_1.removeAllItems();
 					comboBox_1.addItem("1");
@@ -566,6 +644,20 @@ public class SesionJefeProceso {
 					textField_2.setText("20");
 					textField_3.setText("16");
 				} else {
+					textField_4.setEnabled(false);
+					textFieldTecnicos.setEnabled(false);
+					textFieldControladores.setEnabled(false);
+					textField.setEnabled(false);
+					textField_1.setEnabled(false);
+					textField_2.setEnabled(false);
+					textField_3.setEnabled(false);
+					btnNewButton.setEnabled(false);
+					button.setEnabled(false);
+					button_3.setEnabled(false);
+					button_1.setEnabled(false);
+					button_2.setEnabled(false);
+					button_4.setEnabled(false);
+					button_5.setEnabled(false);
 					comboBox_1.removeAllItems();
 					comboBox_1.setEnabled(false);
 				}
@@ -596,27 +688,6 @@ public class SesionJefeProceso {
 		});
 		btnDdd.setBounds(410, 466, 150, 25);
 		frame.getContentPane().add(btnDdd);
-		
-		JButton btnNewButton = new JButton("Empezar");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Conexion conn = new Conexion();
-				conn.crearCabezera(
-						Integer.parseInt(comboBox_1.getSelectedItem().toString()),
-						comboBox.getSelectedItem().toString(),
-						Integer.parseInt(spinner.getValue().toString())
-						);
-				comboBox.setEnabled(false);
-				comboBox_1.setEnabled(false);
-				spinner.setEnabled(false);
-				DefinirAreas definirAreas = new DefinirAreas(Integer.parseInt(textField_4.getText()));
-				definirAreas.frame.setVisible(true);
-				Main.centralizar(definirAreas.frame);
-			}
-		});
-		btnNewButton.setForeground(Color.WHITE);
-		btnNewButton.setBackground(new Color(77, 1, 33));
-		btnNewButton.setBounds(170, 77, 118, 22);
-		panel_3.add(btnNewButton);
+
 	}
 }
