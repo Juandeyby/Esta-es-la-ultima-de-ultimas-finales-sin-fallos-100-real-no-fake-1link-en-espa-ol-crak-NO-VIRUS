@@ -20,13 +20,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.awt.event.ActionEvent;
 
-public class SeleccionTecnicos {
+public class SeleccionPortero {
 
 	public JFrame frame;
 	DefaultTableModel model;
 	JTable table11;
 
-	public SeleccionTecnicos (List<ParticipanteBuscar> participantesBuscar, ArrayList<Object> capacidad) {
+	public SeleccionPortero (List<ParticipanteBuscar> participantesBuscar, ArrayList<Object> capacidad) {
 		frame = new JFrame();
 		ImageIcon img = new ImageIcon("./Imagenes/escudo.png");
 		frame.setIconImage(img.getImage());
@@ -141,9 +141,9 @@ public class SeleccionTecnicos {
 		JButton Button31 = new JButton("Buscar");
 		Button31.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BuscarTecnicos buscarTecnicos = new BuscarTecnicos(participantesBuscar, capacidad);
-				buscarTecnicos.frame.setVisible(true);
-				Main.centralizar(buscarTecnicos.frame);
+				BuscarPortero buscarPortero = new BuscarPortero(participantesBuscar, capacidad);
+				buscarPortero.frame.setVisible(true);
+				Main.centralizar(buscarPortero.frame);
 				frame.dispose();
 			}
 		});
@@ -205,7 +205,7 @@ public class SeleccionTecnicos {
 					}
 				}
 				
-				SeleccionTecnicos seleccionControladores = new SeleccionTecnicos(participantesBuscar, capacidad);
+				SeleccionPortero seleccionControladores = new SeleccionPortero(participantesBuscar, capacidad);
 				seleccionControladores.frame.setVisible(true);
 				Main.centralizar(seleccionControladores.frame);
 				frame.dispose();
@@ -268,7 +268,7 @@ public class SeleccionTecnicos {
 					}
 				}
 				
-				SeleccionTecnicos seleccionEspecificaFormuladores = new SeleccionTecnicos(participantesBuscar, capacidad);
+				SeleccionPortero seleccionEspecificaFormuladores = new SeleccionPortero(participantesBuscar, capacidad);
 				seleccionEspecificaFormuladores.frame.setVisible(true);
 				Main.centralizar(seleccionEspecificaFormuladores.frame);
 				frame.dispose();
@@ -283,7 +283,7 @@ public class SeleccionTecnicos {
 				int i = JOptionPane.showConfirmDialog(null, "¿Desea Guardar la Selección?", "Confirmar", JOptionPane.YES_NO_OPTION);
 				if(i == 0){
 					Conexion conn = new Conexion();
-					conn.insertarExportar(2, participantesBuscar);
+					conn.insertarExportar(6, participantesBuscar);
 					JOptionPane.showMessageDialog(null, "Exito al Guardar Lista", "Exito", JOptionPane.INFORMATION_MESSAGE);
 					frame.dispose();
 				}

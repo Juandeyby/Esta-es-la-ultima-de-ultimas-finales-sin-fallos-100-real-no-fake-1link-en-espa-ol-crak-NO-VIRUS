@@ -28,8 +28,6 @@ public class BuscarFormuladores {
 	private JTextField txtApellidos;
 	public ArrayList<Seleccionado> seleccionados;
 	DefaultTableModel model;
-	int capacidad = 0;
-	int contador = 0;
 	Conexion conn;
 	JTable tableParticipantes;
 	DefaultTableModel modelSeleccionados;
@@ -166,11 +164,6 @@ public class BuscarFormuladores {
 		tableParticipantes.getColumnModel().getColumn(2).setMinWidth(130);
 		tableParticipantes.getColumnModel().getColumn(3).setMinWidth(90);
 		tableParticipantes.getColumnModel().getColumn(4).setMinWidth(100);
-		
-		for (int i = 0; i < areas.size(); i++) {
-			capacidad += Integer.parseInt(areas.get(i).get(1).toString());
-		}
-		System.out.println(capacidad);
 		
 		tableParticipantes.setPreferredScrollableViewportSize(tableParticipantes.getPreferredSize());
 		tableParticipantes.setBounds(5, 17, 320, 417);

@@ -44,7 +44,7 @@ public class SesionJefeProceso {
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTextField textFieldTecnicos;
-	private JTextField textField_6;
+	private JTextField textFieldControladores;
 	
 	private JComboBox comboBox;
 	private JComboBox comboBox_1;
@@ -267,9 +267,21 @@ public class SesionJefeProceso {
 		JButton button_3 = new JButton("Empezar");
 		button_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				Buscar buscar = new Buscar();
-//				buscar.frame.setVisible(true);
-//				Main.centralizar(buscar.frame);
+				ArrayList<Object> capacidad = new ArrayList<Object>();
+				capacidad.add(Integer.parseInt(textFieldControladores.getText()));
+				capacidad.add(0);
+				
+				List<ParticipanteBuscar> participantesBuscar = new ArrayList<ParticipanteBuscar>();
+				Conexion conn = new Conexion();
+				
+				ArrayList<ParticipanteOut> participantesTemp = conn.mostrar();
+				for (int i = 0; i < participantesTemp.size(); i++) {
+					participantesBuscar.add(new ParticipanteBuscar(participantesTemp.get(i), true));
+				}
+				
+				SeleccionPortero seleccionControladores = new SeleccionPortero(participantesBuscar, capacidad);
+				seleccionControladores.frame.setVisible(true);
+				Main.centralizar(seleccionControladores.frame);
 			}
 		});
 		button_3.setForeground(Color.WHITE);
@@ -281,10 +293,10 @@ public class SesionJefeProceso {
 		label_8.setBounds(160, 15, 120, 25);
 		panel_7.add(label_8);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(163, 41, 124, 22);
-		panel_7.add(textField_6);
+		textFieldControladores = new JTextField();
+		textFieldControladores.setColumns(10);
+		textFieldControladores.setBounds(163, 41, 124, 22);
+		panel_7.add(textFieldControladores);
 		
 		JLabel label_10 = new JLabel("New label");
 		label_10.setBounds(26, 15, 110, 87);
@@ -314,9 +326,21 @@ public class SesionJefeProceso {
 		JButton button_2 = new JButton("Empezar");
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				Buscar buscar = new Buscar();
-//				buscar.frame.setVisible(true);
-//				Main.centralizar(buscar.frame);
+				ArrayList<Object> capacidad = new ArrayList<Object>();
+				capacidad.add(Integer.parseInt(textField_1.getText()));
+				capacidad.add(0);
+				
+				List<ParticipanteBuscar> participantesBuscar = new ArrayList<ParticipanteBuscar>();
+				Conexion conn = new Conexion();
+				
+				ArrayList<ParticipanteOut> participantesTemp = conn.mostrar();
+				for (int i = 0; i < participantesTemp.size(); i++) {
+					participantesBuscar.add(new ParticipanteBuscar(participantesTemp.get(i), true));
+				}
+				
+				SeleccionPortero seleccionContador = new SeleccionPortero(participantesBuscar, capacidad);
+				seleccionContador.frame.setVisible(true);
+				Main.centralizar(seleccionContador.frame);
 			}
 		});
 		button_2.setForeground(Color.WHITE);
@@ -351,9 +375,21 @@ public class SesionJefeProceso {
 		JButton button_1 = new JButton("Empezar");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				Buscar buscar = new Buscar();
-//				buscar.frame.setVisible(true);
-//				Main.centralizar(buscar.frame);
+				ArrayList<Object> capacidad = new ArrayList<Object>();
+				capacidad.add(Integer.parseInt(textField.getText()));
+				capacidad.add(0);
+				
+				List<ParticipanteBuscar> participantesBuscar = new ArrayList<ParticipanteBuscar>();
+				Conexion conn = new Conexion();
+				
+				ArrayList<ParticipanteOut> participantesTemp = conn.mostrar();
+				for (int i = 0; i < participantesTemp.size(); i++) {
+					participantesBuscar.add(new ParticipanteBuscar(participantesTemp.get(i), true));
+				}
+				
+				SeleccionPortero seleccionConserje = new SeleccionPortero(participantesBuscar, capacidad);
+				seleccionConserje.frame.setVisible(true);
+				Main.centralizar(seleccionConserje.frame);
 			}
 		});
 		button_1.setForeground(Color.WHITE);
@@ -389,9 +425,21 @@ public class SesionJefeProceso {
 		JButton button_4 = new JButton("Empezar");
 		button_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				Buscar buscar = new Buscar();
-//				buscar.frame.setVisible(true);
-//				Main.centralizar(buscar.frame);
+				ArrayList<Object> capacidad = new ArrayList<Object>();
+				capacidad.add(Integer.parseInt(textField_2.getText()));
+				capacidad.add(0);
+				
+				List<ParticipanteBuscar> participantesBuscar = new ArrayList<ParticipanteBuscar>();
+				Conexion conn = new Conexion();
+				
+				ArrayList<ParticipanteOut> participantesTemp = conn.mostrar();
+				for (int i = 0; i < participantesTemp.size(); i++) {
+					participantesBuscar.add(new ParticipanteBuscar(participantesTemp.get(i), true));
+				}
+				
+				SeleccionPortero seleccionPortero = new SeleccionPortero(participantesBuscar, capacidad);
+				seleccionPortero.frame.setVisible(true);
+				Main.centralizar(seleccionPortero.frame);
 			}
 		});
 		button_4.setForeground(Color.WHITE);
@@ -420,16 +468,28 @@ public class SesionJefeProceso {
 		panel_9.setBounds(12, 290, 372, 84);
 		panel_9.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black),
-				"Revisadores", TitledBorder.LEFT, TitledBorder.TOP));
+				"Verificador", TitledBorder.LEFT, TitledBorder.TOP));
 		panel_2.add(panel_9);
 		panel_9.setLayout(null);
 		
 		JButton button_5 = new JButton("Empezar");
 		button_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				Buscar buscar = new Buscar();
-//				buscar.frame.setVisible(true);
-//				Main.centralizar(buscar.frame);
+				ArrayList<Object> capacidad = new ArrayList<Object>();
+				capacidad.add(Integer.parseInt(textField_3.getText()));
+				capacidad.add(0);
+				
+				List<ParticipanteBuscar> participantesBuscar = new ArrayList<ParticipanteBuscar>();
+				Conexion conn = new Conexion();
+				
+				ArrayList<ParticipanteOut> participantesTemp = conn.mostrar();
+				for (int i = 0; i < participantesTemp.size(); i++) {
+					participantesBuscar.add(new ParticipanteBuscar(participantesTemp.get(i), true));
+				}
+				
+				SeleccionVerificador seleccionVerificador = new SeleccionVerificador(participantesBuscar, capacidad);
+				seleccionVerificador.frame.setVisible(true);
+				Main.centralizar(seleccionVerificador.frame);
 			}
 		});
 		button_5.setForeground(Color.WHITE);
@@ -474,7 +534,7 @@ public class SesionJefeProceso {
 					comboBox_1.addItem("1");
 					textField_4.setText("50");
 					textFieldTecnicos.setText("25");
-					textField_6.setText("50");
+					textFieldControladores.setText("50");
 					textField.setText("15");
 					textField_1.setText("10");
 					textField_2.setText("8");
@@ -487,7 +547,7 @@ public class SesionJefeProceso {
 					comboBox_1.addItem("3");
 					textField_4.setText("50");
 					textFieldTecnicos.setText("50");
-					textField_6.setText("75");
+					textFieldControladores.setText("75");
 					textField.setText("20");
 					textField_1.setText("10");
 					textField_2.setText("12");
@@ -500,7 +560,7 @@ public class SesionJefeProceso {
 					comboBox_1.addItem("3");
 					textField_4.setText("50");
 					textFieldTecnicos.setText("100");
-					textField_6.setText("150");
+					textFieldControladores.setText("150");
 					textField.setText("40");
 					textField_1.setText("10");
 					textField_2.setText("20");

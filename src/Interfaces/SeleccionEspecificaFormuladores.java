@@ -347,8 +347,13 @@ public class SeleccionEspecificaFormuladores {
 		JButton btnRegresar = new JButton("Guardar");
 		btnRegresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Conexion conn = new Conexion();
-				conn.insertarExportar(1, participantesBuscar);
+				int i = JOptionPane.showConfirmDialog(null, "¿Desea Guardar la Selección?", "Confirmar", JOptionPane.YES_NO_OPTION);
+				if(i == 0){
+					Conexion conn = new Conexion();
+					conn.insertarExportar(1, participantesBuscar);
+					JOptionPane.showMessageDialog(null, "Exito al Guardar Lista", "Exito", JOptionPane.INFORMATION_MESSAGE);
+					frame.dispose();
+				}
 			}
 		});
 		btnRegresar.setBounds(325, 410, 150, 25);

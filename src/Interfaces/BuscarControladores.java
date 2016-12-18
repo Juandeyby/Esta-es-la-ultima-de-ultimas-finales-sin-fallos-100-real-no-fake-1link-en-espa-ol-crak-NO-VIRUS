@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.awt.event.ActionEvent;
 
-public class BuscarTecnicos {
+public class BuscarControladores {
 
 	public JFrame frame;
 	private JTextField textField;
@@ -31,7 +31,7 @@ public class BuscarTecnicos {
 	DefaultTableModel modelSeleccionados;
 	DefaultTableModel modelParticipantes;
 	
-	public BuscarTecnicos (List<ParticipanteBuscar> participantesBuscar, ArrayList<Object> capacidad) {
+	public BuscarControladores (List<ParticipanteBuscar> participantesBuscar, ArrayList<Object> capacidad) {
 		frame = new JFrame();
 		ImageIcon img = new ImageIcon("./Imagenes/escudo.png");
 		frame.setIconImage(img.getImage());

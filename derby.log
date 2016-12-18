@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Dec 18 15:19:15 PET 2016:
+ Iniciando instancia a816c00e-0159-1396-9d49-000009ae5b40 de Derby, versión The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): 
+en el directorio de base de datos /home/juandeyby/git/ProyectoCSDefiniivo/ProyectCS/.\DB\Derby.DB con el cargador de clases sun.misc.Launcher$AppClassLoader@73d16e93
+Cargado desde file:/home/juandeyby/Descargas/db-derby-10.13.1.1-lib/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_77-b03
+user.dir=/home/juandeyby/git/ProyectoCSDefiniivo/ProyectCS
+os.name=Linux
+os.arch=amd64
+os.version=4.8.0-30-generic
+derby.system.home=null
+Cargador de clases de base de datos iniciado - derby.database.classpath=''
