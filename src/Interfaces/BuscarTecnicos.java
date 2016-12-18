@@ -21,21 +21,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.awt.event.ActionEvent;
 
-public class BuscarFormuladores {
+public class BuscarTecnicos {
 
 	public JFrame frame;
 	private JTextField textField;
 	private JTextField txtApellidos;
 	public ArrayList<Seleccionado> seleccionados;
 	DefaultTableModel model;
-	int capacidad = 0;
-	int contador = 0;
 	Conexion conn;
 	JTable tableParticipantes;
 	DefaultTableModel modelSeleccionados;
 	DefaultTableModel modelParticipantes;
 	
-	public void buscar (List<ParticipanteBuscar> participantesBuscar, ArrayList<ArrayList<Object>> areas) {
+	public BuscarTecnicos (List<ParticipanteBuscar> participantesBuscar, ArrayList<Object> capacidad) {
 		frame = new JFrame();
 		ImageIcon img = new ImageIcon("./Imagenes/escudo.png");
 		frame.setIconImage(img.getImage());
@@ -73,15 +71,14 @@ public class BuscarFormuladores {
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black),
 				"Resultados", TitledBorder.LEFT, TitledBorder.TOP));
 		
-		JTable tableSeleccionados = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Especialidad", "Agregar"}, 0));
+		JTable tableSeleccionados = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Agregar"}, 0));
 		
 		modelSeleccionados = (DefaultTableModel) tableSeleccionados.getModel();
 
 		tableSeleccionados.getColumnModel().getColumn(0).setMinWidth(75);
-		tableSeleccionados.getColumnModel().getColumn(1).setMinWidth(130);
-		tableSeleccionados.getColumnModel().getColumn(2).setMinWidth(130);
-		tableSeleccionados.getColumnModel().getColumn(3).setMinWidth(90);
-		tableSeleccionados.getColumnModel().getColumn(4).setMinWidth(100);
+		tableSeleccionados.getColumnModel().getColumn(1).setMinWidth(180);
+		tableSeleccionados.getColumnModel().getColumn(2).setMinWidth(180);
+		tableSeleccionados.getColumnModel().getColumn(3).setMinWidth(100);
 		
 		tableSeleccionados.setPreferredScrollableViewportSize(tableSeleccionados.getPreferredSize());
 		tableSeleccionados.setBounds(5, 17, 320, 417);
@@ -110,7 +107,6 @@ public class BuscarFormuladores {
 								participantesBuscar.get(i).getDni_participante(),
 								participantesBuscar.get(i).getNombre_participante(),
 								participantesBuscar.get(i).getApellido_participante(),
-								participantesBuscar.get(i).getId_especialidad(),
 								"Agregar"});
 				}
 		    	
@@ -123,13 +119,12 @@ public class BuscarFormuladores {
 								participantesBuscar.get(i).getDni_participante(),
 								participantesBuscar.get(i).getNombre_participante(),
 								participantesBuscar.get(i).getApellido_participante(),
-								participantesBuscar.get(i).getId_especialidad(),
 								"Eliminar"});
 				}
 		    }
 		};
 		
-		ButtonColumn buttonColumn1 = new ButtonColumn(tableSeleccionados, elminar, 4);
+		ButtonColumn buttonColumn1 = new ButtonColumn(tableSeleccionados, elminar, 3);
 		buttonColumn1.setMnemonic(KeyEvent.VK_D);
 
 		
@@ -146,7 +141,7 @@ public class BuscarFormuladores {
 		frame.getContentPane().add(panel1);
 
 		
-		tableParticipantes = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Especialidad", "Agregar"}, 0));
+		tableParticipantes = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Agregar"}, 0));
 		
 		ArrayList<Integer> direcciones = new ArrayList<Integer>();
 		
@@ -159,20 +154,13 @@ public class BuscarFormuladores {
 						participantesBuscar.get(i).getDni_participante(),
 						participantesBuscar.get(i).getNombre_participante(),
 						participantesBuscar.get(i).getApellido_participante(),
-						participantesBuscar.get(i).getId_especialidad(),
 						"Agregar"});
 		}
 		
 		tableParticipantes.getColumnModel().getColumn(0).setMinWidth(75);
-		tableParticipantes.getColumnModel().getColumn(1).setMinWidth(130);
-		tableParticipantes.getColumnModel().getColumn(2).setMinWidth(130);
-		tableParticipantes.getColumnModel().getColumn(3).setMinWidth(90);
-		tableParticipantes.getColumnModel().getColumn(4).setMinWidth(100);
-		
-		for (int i = 0; i < areas.size(); i++) {
-			capacidad += Integer.parseInt(areas.get(i).get(1).toString());
-		}
-		System.out.println(capacidad);
+		tableParticipantes.getColumnModel().getColumn(1).setMinWidth(180);
+		tableParticipantes.getColumnModel().getColumn(2).setMinWidth(180);
+		tableParticipantes.getColumnModel().getColumn(3).setMinWidth(100);
 		
 		tableParticipantes.setPreferredScrollableViewportSize(tableParticipantes.getPreferredSize());
 		tableParticipantes.setBounds(5, 17, 320, 417);
@@ -191,7 +179,6 @@ public class BuscarFormuladores {
 						modelParticipantes.getValueAt(modelRow, 0),
 						modelParticipantes.getValueAt(modelRow, 1),
 						modelParticipantes.getValueAt(modelRow, 2),
-						modelParticipantes.getValueAt(modelRow, 3),
 						"Eliminar"});
 		    	for (int i = 0; i < participantesBuscar.size(); i++) {
 					if (participantesBuscar.get(i).getDni_participante().equals(modelParticipantes.getValueAt(modelRow, 0)))
@@ -207,15 +194,13 @@ public class BuscarFormuladores {
 								participantesBuscar.get(i).getDni_participante(),
 								participantesBuscar.get(i).getNombre_participante(),
 								participantesBuscar.get(i).getApellido_participante(),
-								participantesBuscar.get(i).getId_especialidad(),
 								"Agregar"});
 				}
 		    }
 		};
 		
-		ButtonColumn buttonColumn2 = new ButtonColumn(tableParticipantes, agregar, 4);
+		ButtonColumn buttonColumn2 = new ButtonColumn(tableParticipantes, agregar, 3);
 		buttonColumn2.setMnemonic(KeyEvent.VK_D);
-
 
 		JScrollPane scrollPane1 = new JScrollPane(tableParticipantes);
 		scrollPane1.setBounds(12, 27, 556, 168);
@@ -224,9 +209,9 @@ public class BuscarFormuladores {
 		JButton btnRegresar = new JButton("Agregar");
 		btnRegresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SeleccionEspecificaFormuladores seleccionEspecificaFormuladores = new SeleccionEspecificaFormuladores(participantesBuscar, areas);
-				seleccionEspecificaFormuladores.frame.setVisible(true);
-				Main.centralizar(seleccionEspecificaFormuladores.frame);
+				SeleccionTecnicos seleccionTecnicos = new SeleccionTecnicos(participantesBuscar, capacidad);
+				seleccionTecnicos.frame.setVisible(true);
+				Main.centralizar(seleccionTecnicos.frame);
 				frame.dispose();
 			}
 		});
@@ -264,7 +249,6 @@ public class BuscarFormuladores {
 									participantesBuscar.get(i).getDni_participante(),
 									participantesBuscar.get(i).getNombre_participante(),
 									participantesBuscar.get(i).getApellido_participante(),
-									participantesBuscar.get(i).getId_especialidad(),
 									"Agregar"});
 					}
 				}

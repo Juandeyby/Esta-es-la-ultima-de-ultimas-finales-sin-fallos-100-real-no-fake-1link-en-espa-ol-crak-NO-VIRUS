@@ -36,7 +36,7 @@ public class Login {
 		frmExaminV = new JFrame();
 		ImageIcon img = new ImageIcon("./Imagenes/escudo.png");
 		frmExaminV.setIconImage(img.getImage());
-		frmExaminV.setTitle("Examin v1.0");
+		frmExaminV.setTitle("Examin v2.0");
 		frmExaminV.setSize(480, 320);
 		frmExaminV.getContentPane().setBackground(new Color(77, 1, 33));
 		frmExaminV.getContentPane().setLayout(null);

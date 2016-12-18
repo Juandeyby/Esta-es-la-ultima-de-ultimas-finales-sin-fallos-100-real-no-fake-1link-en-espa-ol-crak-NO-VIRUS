@@ -1,5 +1,6 @@
 package Controladores;
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,12 +10,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import Clases.Historial;
+import Clases.ParticipanteOut;
 import Clases.Participante;
 import Clases.ParticipanteBuscar;
-import Clases.ParticipanteOut;
+import Clases.Historial;
 import Clases.ParticipantePDF;
-import Clases.Seleccionado;
 import Clases.Usuario;
 
 public class Conexion {
@@ -193,7 +193,7 @@ public class Conexion {
 						+ "  id_fase_proceso Int NOT NULL,"
 						+ "  anio_proceso Int NOT NULL,"
 						+ "  id_cargo_proceso Int NOT NULL,"
-						+ "  experiencia_historial_proceso Int,"
+						+ "  experiencia_historial_proceso Int NOT NULL,"
 						+ "  observacion_historial_proceso char(200)"
 						+ ") ");
 				System.out.println(prestat.executeUpdate());
@@ -425,6 +425,9 @@ public class Conexion {
 				prestat = conn.prepareStatement("INSERT INTO funcion (nombre_funcion)"
 						+ " VALUES ('BIBLIOTECARIO')");
 				System.out.println(prestat.executeUpdate());
+				prestat = conn.prepareStatement("INSERT INTO funcion (nombre_funcion)"
+						+ " VALUES ('SINFUNCION')");
+				System.out.println(prestat.executeUpdate());
 				
 				//Tipo Condición
 				prestat = conn.prepareStatement("INSERT INTO tipo_condicion (nombre_tipo_condicion)"
@@ -495,6 +498,10 @@ public class Conexion {
 				
 				prestat = conn.prepareStatement("INSERT INTO especialidad (nombre_especialidad)"
 						+ " VALUES ('RAZMATEMATICO')");
+				System.out.println(prestat.executeUpdate());
+				
+				prestat = conn.prepareStatement("INSERT INTO especialidad (nombre_especialidad)"
+						+ " VALUES ('SINFUNCION')");
 				System.out.println(prestat.executeUpdate());
 				
 				//Facultad
@@ -1126,6 +1133,7 @@ public class Conexion {
 		
 		Connection conn = null;
 		PreparedStatement prestat = null;
+		ResultSet pw = null;
 		
 		try {
 			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
@@ -1141,18 +1149,34 @@ public class Conexion {
 
 		try {
 			System.out.println(historial.toString());
-			prestat = conn.prepareStatement("INSERT INTO historial_proceso_detalle (id_anio_proceso, "
-					+ " id_tipo_proceso, id_cargo_proceso, observacion_historial_proceso,"
-					+ " experiencia_historial_proceso, dni_participante)"
+			prestat = conn.prepareStatement("INSERT INTO historial_proceso (dni_participante, "
+					+ " id_tipo_proceso, id_fase_proceso, anio_proceso,"
+					+ " id_cargo_proceso, experiencia_historial_proceso, observacion_historial_proceso)"
 					+ " VALUES ("
-					+ historial.getCodigoAnioProceso() + ","
-					+ historial.getCodigoTipoProceso() + ","
-					+ historial.getCodigoCargoProceso()+ ","
-					+ " '" + historial.getObservacion_historialProceso()+ "',"
-					+ historial.getExperiencia_historialProceso()+ ","
-					+ " '" + 26217555 + "' "
+					+ "'" + historial.getDni_participante() + "',"
+					+ historial.getId_tipo_proceso() + ","
+					+ historial.getId_fase_proceso() + ","
+					+ historial.getId_cargo_proceso() + ","
+					+ historial.getAnio_proceso() + ","
+					+ historial.getExperiencia_historial_proceso() + ","
+					+ " '" + historial.getObservacion_historial_proceso() + "' "
 					+ ")");
 			System.out.println(prestat.executeUpdate());
+			
+			prestat = conn.prepareStatement("SELECT * FROM historial_proceso");
+			pw = prestat.executeQuery();
+			
+			while (pw.next()) {
+				System.out.println(
+						pw.getString("dni_participante") + "\t"
+						+ pw.getInt("id_tipo_proceso") + "\t"
+						+ pw.getInt("id_fase_proceso") + "\t"
+						+ pw.getInt("anio_proceso") + "\t"
+						+ pw.getInt("id_cargo_proceso") + "\t"
+						+ pw.getInt("experiencia_historial_proceso") + "\t"
+						+ refinar(pw.getString("observacion_historial_proceso"))
+						);
+			}
 			
 			conn.close();
 			prestat.close();

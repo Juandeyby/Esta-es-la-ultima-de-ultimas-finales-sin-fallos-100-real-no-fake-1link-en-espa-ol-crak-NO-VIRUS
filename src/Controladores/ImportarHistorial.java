@@ -1,25 +1,52 @@
 package Controladores;
-
 import java.io.BufferedReader;
-
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Clases.*;
 
 public class ImportarHistorial {
 	
-	public static void main(String[] args) {
-		ImportarHistorial importar = new ImportarHistorial();
+	JProgressBar progressBar;
+	ArrayList<Historial> historiales;
+	public int i = 0;
+	private BufferedReader br;
+
+	private class Hilo implements Runnable {
+		@Override
+		public void run() {
+			JFrame frame = new JFrame("Importando Historial");
+			frame.setBounds(100, 100, 281, 60);
+			frame.getContentPane().setLayout(null);
+			
+			progressBar = new JProgressBar(0, historiales.size()-1);
+			progressBar.setStringPainted(true);
+			progressBar.setBounds(12, 12, 257, 28);
+			progressBar.setValue(0);
+			
+			frame.getContentPane().add(progressBar);
+			Main.centralizar(frame);
+			frame.setVisible(true);
+			
+			Conexion conn = new Conexion();
+			for (i = 0; i < historiales.size(); i++) {
+				progressBar.setValue(i);
+				conn.insertarHistorial(historiales.get(i));
+			}
+
+			frame.dispose();
+		}
 	}
 	
 	public ImportarHistorial () {
+		
 		try {
 			String line = "";
 			JFileChooser file = new JFileChooser();
@@ -32,48 +59,39 @@ public class ImportarHistorial {
 			
 			File abre = file.getSelectedFile();
 			line = abre.getName();
-				
-			ArrayList<Historial> historiales = new ArrayList<Historial>();
+			
+			historiales = new ArrayList<Historial>();
 			
 			if(abre != null) {
-				BufferedReader br = new BufferedReader(new FileReader(abre));
+				br = new BufferedReader(new FileReader(abre));
+				
 				while ((line = br.readLine()) != null) {
 					String [] registro = line.split(";");
-					System.out.println(registro.length);
-					if(registro.length < 6)
-						break;
+					if(registro.length < 7)
+						continue;
 					Historial historialTemp = null;
 					for (int i = 0; i < registro.length; i++) {
-						registro[3] = registro[3].equals("") ? "null" : registro[3];
-						registro[4] = registro[4].equals("") ? "0" : registro[4];
-												
-						historialTemp = new Historial (
-								Integer.parseInt(registro[0]),
+						historialTemp = new Historial(
+								registro[0],
 								Integer.parseInt(registro[1]),
 								Integer.parseInt(registro[2]),
-								registro[3],
+								Integer.parseInt(registro[3]),
 								Integer.parseInt(registro[4]),
-								registro[5]
+								Integer.parseInt(registro[5]),
+								registro[6].equals("") ? "null" : registro[6]
 								);
 					}
 					
 					if(historialTemp == null)
 						return;
-					
 					historiales.add(historialTemp);
-//					for (int i = 0; i < participantes.size(); i++) {
-//						System.out.println(participantes.get(i).toString());
-//					}
 				}
 			}
 			
 			//Agregar a Derby
-			Conexion conn = new Conexion();
-			for (int i = 0; i < historiales.size(); i++) {
-				conn.insertarHistorial(historiales.get(i));
-			}
+			new Thread(new Hilo()).start();
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
             e.printStackTrace();
 		}
 	}

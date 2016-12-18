@@ -111,21 +111,8 @@ public class SesionAdministrador {
 		JMenuItem mntmImportarDatos = new JMenuItem("Importar Participantes");
 		mntmImportarDatos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ImportarParticipantes importarParticipantes = new ImportarParticipantes();
-				conn = new Conexion();
-				ArrayList<ParticipanteOut> participantes = conn.mostrar();
-			
-				for (int i = 0; i < participantes.size(); i++) {
-					model.addRow(new Object[] {
-							participantes.get(i).getDni_participante(),
-							conn.refinar(participantes.get(i).getNombre_participante()),
-							conn.refinar(participantes.get(i).getApellido_participante()),
-							conn.refinar(participantes.get(i).getId_funcion()),
-							conn.refinar(participantes.get(i).getId_tipo_participante()),
-							Boolean.parseBoolean(participantes.get(i).isEstado_participante() + ""),
-							"Ver"
-							});
-				}
+				ImportarParticipantes importarParticipantes = new ImportarParticipantes(model);
+				
 			}
 		});
 		mnNewMenu_1.add(mntmImportarDatos);

@@ -11,16 +11,23 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import Controladores.Conexion;
 import Controladores.Main;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import Clases.ParticipanteBuscar;
+import Clases.ParticipanteOut;
+
 import javax.swing.SpinnerNumberModel;
 
 public class DefinirAreas  {
@@ -234,22 +241,87 @@ public class DefinirAreas  {
 					 cantidadAreasTemp += Integer.parseInt(spinner11.getValue().toString());
 				 if (cantidadAreasTemp == cantidadAreas) {
 					 
-						String [][] areas = {
-								{"QUIMICA", spinner1.getValue().toString()},
-								{"BIOLOGIA",  spinner2.getValue().toString()},
-								{"FISICA",  spinner3.getValue().toString()},
-								{"LENGUAJE",  spinner4.getValue().toString()},
-								{"LITERATURA",  spinner5.getValue().toString()},
-								{"HISTORIA",  spinner6.getValue().toString()},
-								{"GEOGRAFIA",  spinner7.getValue().toString()},
-								{"FILOSOFIA",  spinner8.getValue().toString()},
-								{"PSICOLOGIA",  spinner9.getValue().toString()},
-								{"MATEMATICA",  spinner10.getValue().toString()},
-								{"RAZVERBAL",  spinner11.getValue().toString()},
-								{"RAZMATEMATICO",  spinner12.getValue().toString()},
-								};
-					 SeleccionEspecificaFormuladores seleccionEspecificaFormuladores = new SeleccionEspecificaFormuladores();
-					 seleccionEspecificaFormuladores.principal(areas);
+					 ArrayList<ArrayList<Object>> areas = new ArrayList<ArrayList<Object>>();
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(0).add("QUIMICA");
+					 areas.get(0).add(Integer.parseInt(spinner1.getValue().toString()));
+					 areas.get(0).add(0);
+					 areas.get(0).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(1).add("BIOLOGIA");
+					 areas.get(1).add(Integer.parseInt(spinner2.getValue().toString()));
+					 areas.get(1).add(0);
+					 areas.get(1).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(2).add("FISICA");
+					 areas.get(2).add(Integer.parseInt(spinner3.getValue().toString()));
+					 areas.get(2).add(0);
+					 areas.get(2).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(3).add("LENGUAJE");
+					 areas.get(3).add(Integer.parseInt(spinner4.getValue().toString()));
+					 areas.get(3).add(0);
+					 areas.get(3).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(4).add("LITERATURA");
+					 areas.get(4).add(Integer.parseInt(spinner5.getValue().toString()));
+					 areas.get(4).add(0);
+					 areas.get(4).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(5).add("HISTORIA");
+					 areas.get(5).add(Integer.parseInt(spinner6.getValue().toString()));
+					 areas.get(5).add(0);
+					 areas.get(5).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(6).add("GEOGRAFIA");
+					 areas.get(6).add(Integer.parseInt(spinner7.getValue().toString()));
+					 areas.get(6).add(0);
+					 areas.get(6).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(7).add("FILOSOFIA");
+					 areas.get(7).add(Integer.parseInt(spinner8.getValue().toString()));
+					 areas.get(7).add(0);
+					 areas.get(7).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(8).add("PSICOLOGIA");
+					 areas.get(8).add(Integer.parseInt(spinner9.getValue().toString()));
+					 areas.get(8).add(0);
+					 areas.get(8).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(9).add("MATEMATICA");
+					 areas.get(9).add(Integer.parseInt(spinner10.getValue().toString()));
+					 areas.get(9).add(0);
+					 areas.get(9).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(10).add("RAZVERBAL");
+					 areas.get(10).add(Integer.parseInt(spinner11.getValue().toString()));
+					 areas.get(10).add(0);
+					 areas.get(10).add(new Color(77, 1, 33));
+					 
+					 areas.add(new ArrayList<Object>());
+					 areas.get(11).add("RAZMATEMATICO");
+					 areas.get(11).add(Integer.parseInt(spinner12.getValue().toString()));
+					 areas.get(11).add(0);
+					 areas.get(11).add(new Color(77, 1, 33));
+					 
+					 List<ParticipanteBuscar> participantesBuscar = new ArrayList<ParticipanteBuscar>();
+					 Conexion conn = new Conexion();
+					 ArrayList<ParticipanteOut> participantesTemp = conn.mostrar();
+					 for (int i = 0; i < participantesTemp.size(); i++) {
+				 		 participantesBuscar.add(new ParticipanteBuscar(participantesTemp.get(i), true));
+					 }
+					 SeleccionEspecificaFormuladores seleccionEspecificaFormuladores = new SeleccionEspecificaFormuladores(participantesBuscar, areas);
 					 seleccionEspecificaFormuladores.frame.setVisible(true);
 					 Main.centralizar(seleccionEspecificaFormuladores.frame);
 					 frame.dispose();

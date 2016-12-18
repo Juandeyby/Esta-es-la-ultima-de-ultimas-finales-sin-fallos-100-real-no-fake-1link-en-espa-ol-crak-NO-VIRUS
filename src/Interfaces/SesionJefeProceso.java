@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
@@ -28,6 +30,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Clases.ParticipanteBuscar;
+import Clases.ParticipanteOut;
 import Controladores.Conexion;
 import Controladores.Main;
 
@@ -39,7 +43,7 @@ public class SesionJefeProceso {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField textFieldTecnicos;
 	private JTextField textField_6;
 	
 	private JComboBox comboBox;
@@ -209,14 +213,32 @@ public class SesionJefeProceso {
 		panel.add(panel_4);
 		panel_4.setLayout(null);
 		
+		textFieldTecnicos = new JTextField();
+		textFieldTecnicos.setColumns(10);
+		textFieldTecnicos.setBounds(170, 43, 124, 22);
+		panel_4.add(textFieldTecnicos);
+		
 		JButton button = new JButton("Empezar");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Buscar buscar = new Buscar();
-				buscar.frame.setVisible(true);
-				Main.centralizar(buscar.frame);
+				ArrayList<Object> capacidad = new ArrayList<Object>();
+				capacidad.add(Integer.parseInt(textFieldTecnicos.getText()));
+				capacidad.add(0);
+				
+				List<ParticipanteBuscar> participantesBuscar = new ArrayList<ParticipanteBuscar>();
+				Conexion conn = new Conexion();
+				ArrayList<ParticipanteOut> participantesTemp = conn.mostrar();
+				for (int i = 0; i < participantesTemp.size(); i++) {
+					participantesBuscar.add(new ParticipanteBuscar(participantesTemp.get(i), true));
+				}
+				 
+				
+				SeleccionTecnicos seleccionTecnicos = new SeleccionTecnicos(participantesBuscar, capacidad);
+				seleccionTecnicos.frame.setVisible(true);
+				Main.centralizar(seleccionTecnicos.frame);
 			}
 		});
+		
 		button.setForeground(Color.WHITE);
 		button.setBackground(new Color(77, 1, 33));
 		button.setBounds(170, 77, 124, 22);
@@ -225,11 +247,6 @@ public class SesionJefeProceso {
 		JLabel label_7 = new JLabel("Cantidad", SwingConstants.CENTER);
 		label_7.setBounds(170, 12, 124, 27);
 		panel_4.add(label_7);
-		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(170, 43, 124, 22);
-		panel_4.add(textField_5);
 		
 		JLabel label_9 = new JLabel("New label");
 		label_9.setBounds(26, 15, 110, 87);
@@ -250,9 +267,9 @@ public class SesionJefeProceso {
 		JButton button_3 = new JButton("Empezar");
 		button_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Buscar buscar = new Buscar();
-				buscar.frame.setVisible(true);
-				Main.centralizar(buscar.frame);
+//				Buscar buscar = new Buscar();
+//				buscar.frame.setVisible(true);
+//				Main.centralizar(buscar.frame);
 			}
 		});
 		button_3.setForeground(Color.WHITE);
@@ -297,9 +314,9 @@ public class SesionJefeProceso {
 		JButton button_2 = new JButton("Empezar");
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Buscar buscar = new Buscar();
-				buscar.frame.setVisible(true);
-				Main.centralizar(buscar.frame);
+//				Buscar buscar = new Buscar();
+//				buscar.frame.setVisible(true);
+//				Main.centralizar(buscar.frame);
 			}
 		});
 		button_2.setForeground(Color.WHITE);
@@ -334,9 +351,9 @@ public class SesionJefeProceso {
 		JButton button_1 = new JButton("Empezar");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Buscar buscar = new Buscar();
-				buscar.frame.setVisible(true);
-				Main.centralizar(buscar.frame);
+//				Buscar buscar = new Buscar();
+//				buscar.frame.setVisible(true);
+//				Main.centralizar(buscar.frame);
 			}
 		});
 		button_1.setForeground(Color.WHITE);
@@ -372,9 +389,9 @@ public class SesionJefeProceso {
 		JButton button_4 = new JButton("Empezar");
 		button_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Buscar buscar = new Buscar();
-				buscar.frame.setVisible(true);
-				Main.centralizar(buscar.frame);
+//				Buscar buscar = new Buscar();
+//				buscar.frame.setVisible(true);
+//				Main.centralizar(buscar.frame);
 			}
 		});
 		button_4.setForeground(Color.WHITE);
@@ -410,9 +427,9 @@ public class SesionJefeProceso {
 		JButton button_5 = new JButton("Empezar");
 		button_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Buscar buscar = new Buscar();
-				buscar.frame.setVisible(true);
-				Main.centralizar(buscar.frame);
+//				Buscar buscar = new Buscar();
+//				buscar.frame.setVisible(true);
+//				Main.centralizar(buscar.frame);
 			}
 		});
 		button_5.setForeground(Color.WHITE);
@@ -456,7 +473,7 @@ public class SesionJefeProceso {
 					comboBox_1.removeAllItems();
 					comboBox_1.addItem("1");
 					textField_4.setText("50");
-					textField_5.setText("25");
+					textFieldTecnicos.setText("25");
 					textField_6.setText("50");
 					textField.setText("15");
 					textField_1.setText("10");
@@ -469,7 +486,7 @@ public class SesionJefeProceso {
 					comboBox_1.addItem("2");
 					comboBox_1.addItem("3");
 					textField_4.setText("50");
-					textField_5.setText("50");
+					textFieldTecnicos.setText("50");
 					textField_6.setText("75");
 					textField.setText("20");
 					textField_1.setText("10");
@@ -482,7 +499,7 @@ public class SesionJefeProceso {
 					comboBox_1.addItem("2");
 					comboBox_1.addItem("3");
 					textField_4.setText("50");
-					textField_5.setText("100");
+					textFieldTecnicos.setText("100");
 					textField_6.setText("150");
 					textField.setText("40");
 					textField_1.setText("10");

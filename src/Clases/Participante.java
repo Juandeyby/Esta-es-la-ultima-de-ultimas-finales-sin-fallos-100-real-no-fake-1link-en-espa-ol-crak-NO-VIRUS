@@ -17,6 +17,7 @@ public class Participante {
 	int id_tipo_condicion;
 	int id_funcion;
 	int id_tipo_participante;
+	
 	public Participante(String dni_participante, String nombre_participante, String apellido_participante,
 			String telefono_participante, int telefono_oficina_participante, int celular_participante,
 			String correo_participante, String correo_institucional_participante, String direccion_participante,

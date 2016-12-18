@@ -1,5 +1,4 @@
 package Controladores;
-
 import java.io.BufferedReader;
 
 import java.io.File;
@@ -10,21 +9,59 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 import Clases.*;
 
 public class ImportarParticipantes {
 	
 	JProgressBar progressBar;
-	Hilo hilo;
+	ArrayList<Participante> participantes;
+	public int i = 0;
+	DefaultTableModel model;
+	private BufferedReader br;
 
-	private class Hilo extends Thread {
+	private class Hilo implements Runnable {
+		@Override
 		public void run() {
-			progressBar.setValue(progress);
+			JFrame frame = new JFrame("Importando Participantes");
+			frame.setBounds(100, 100, 281, 60);
+			frame.getContentPane().setLayout(null);
+			
+			progressBar = new JProgressBar(0, participantes.size()-1);
+			progressBar.setStringPainted(true);
+			progressBar.setBounds(12, 12, 257, 28);
+			progressBar.setValue(0);
+			
+			frame.getContentPane().add(progressBar);
+			Main.centralizar(frame);
+			frame.setVisible(true);
+			
+			Conexion conn = new Conexion();
+			for (i = 0; i < participantes.size(); i++) {
+				progressBar.setValue(i);
+				conn.insertarParticipante(participantes.get(i));
+			}
+			
+			ArrayList<ParticipanteOut> participantes = conn.mostrar();
+		
+			for (int i = 0; i < participantes.size(); i++) {
+				model.addRow(new Object[] {
+						participantes.get(i).getDni_participante(),
+						conn.refinar(participantes.get(i).getNombre_participante()),
+						conn.refinar(participantes.get(i).getApellido_participante()),
+						conn.refinar(participantes.get(i).getId_funcion()),
+						conn.refinar(participantes.get(i).getId_tipo_participante()),
+						Boolean.parseBoolean(participantes.get(i).isEstado_participante() + ""),
+						"Ver"
+						});
+			}
+			frame.dispose();
 		}
 	}
 	
-	public ImportarParticipantes () {
+	public ImportarParticipantes (DefaultTableModel model) {
+		this.model = model;
 		
 		try {
 			String line = "";
@@ -39,10 +76,10 @@ public class ImportarParticipantes {
 			File abre = file.getSelectedFile();
 			line = abre.getName();
 			
-			ArrayList<Participante> participantes = new ArrayList<Participante>();
+			participantes = new ArrayList<Participante>();
 			
 			if(abre != null) {
-				BufferedReader br = new BufferedReader(new FileReader(abre));
+				br = new BufferedReader(new FileReader(abre));
 				
 				while ((line = br.readLine()) != null) {
 					String [] registro = line.split(";");
@@ -50,23 +87,16 @@ public class ImportarParticipantes {
 						break;
 					Participante docenteTemp = null;
 					for (int i = 0; i < registro.length; i++) {
-						registro[3] = registro[3].equals("") ? "null" : registro[3];
-						registro[4] = registro[4].equals("") ? "0" : registro[4];
-						registro[5] = registro[5].equals("") ? "null" : registro[5];
-						registro[6] = registro[6].equals("") ? "null" : registro[6];
-						registro[7] = registro[7].equals("") ? "null" : registro[7];
-						registro[8] = registro[8].equals("") ? "null" : registro[8];
-												
 						docenteTemp = new Participante(
 								registro[0],
 								registro[1],
 								registro[2],
-								registro[3],
-								Integer.parseInt(registro[4]),
-								Integer.parseInt(registro[5]),
-								registro[6],
-								registro[7],
-								registro[8],
+								registro[3].equals("") ? "null" : registro[3],
+								Integer.parseInt(registro[4].equals("") ? "0" : registro[4]),
+								Integer.parseInt(registro[5].equals("") ? "null" : registro[5]),
+								registro[6].equals("") ? "null" : registro[6],
+								registro[7].equals("") ? "null" : registro[7],
+								registro[8].equals("") ? "null" : registro[8],
 								Boolean.parseBoolean(registro[9]),
 								Integer.parseInt(registro[10]),
 								Integer.parseInt(registro[11]),
@@ -82,31 +112,8 @@ public class ImportarParticipantes {
 				}
 			}
 			
-			JFrame frame = new JFrame();
-			frame.setBounds(100, 100, 281, 80);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.getContentPane().setLayout(null);
-			
-			progressBar = new JProgressBar(0, participantes.size()-1);
-			progressBar.setValue(0);
-			progressBar.setStringPainted(true);
-			progressBar.setBounds(12, 12, 257, 28);
-			
-			frame.getContentPane().add(progressBar);
-			Main.centralizar(frame);
-			frame.setVisible(true);
 			//Agregar a Derby
-			Conexion conn = new Conexion();
-			for (int i = 0; i < 1000; i++) {
-				progressBar.setValue(i*10);
-				Thread.sleep(10);
-				progressBar.setStringPainted(true);
-			}
-//			for (int i = 0; i < participantes.size(); i++) {
-//				progressBar.setValue(i);
-//				conn.insertarParticipante(participantes.get(i));
-//			}
-//			frame.dispose();
+			new Thread(new Hilo()).start();
 			
 		} catch (Exception e) {
             e.printStackTrace();

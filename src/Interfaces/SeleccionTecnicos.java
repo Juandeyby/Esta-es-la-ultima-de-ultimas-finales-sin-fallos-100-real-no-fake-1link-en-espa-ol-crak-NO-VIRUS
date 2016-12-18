@@ -16,18 +16,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class SeleccionEspecificaFormuladores {
+public class SeleccionTecnicos {
 
 	public JFrame frame;
 	DefaultTableModel model;
 	JTable table11;
-	DefaultTableModel modelAreas;
 
-	public SeleccionEspecificaFormuladores (List<ParticipanteBuscar> participantesBuscar, ArrayList<ArrayList<Object>> areas) {
+	public SeleccionTecnicos(List<ParticipanteBuscar> participantesBuscar, ArrayList<Object> capacidad) {
 		frame = new JFrame();
 		ImageIcon img = new ImageIcon("./Imagenes/escudo.png");
 		frame.setIconImage(img.getImage());
-		frame.setTitle("Selección Especifica");
+		frame.setTitle("Selección Técnicos");
 		frame.setBounds(100, 100, 800, 480);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
@@ -40,28 +39,9 @@ public class SeleccionEspecificaFormuladores {
 		JMenuItem mntmVerManual = new JMenuItem("Ver Manual");
 		mnNewMenu.add(mntmVerManual);
 		frame.getContentPane().setLayout(null);
-		
-		JPanel panel2 = new JPanel();
-		panel2.setBounds(424, 10, 188, 390);
-		panel2.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black),
-				"Cantidad de Área", TitledBorder.LEFT, TitledBorder.TOP));
-		frame.getContentPane().add(panel2);
-		panel2.setLayout(new BorderLayout(0, 0));
-
-		JTable table22 = new JTable(new DefaultTableModel(new Object[]{"Área", "Cantidad"}, 0));
-		FormatoTablaAreas formatoTablaAreas = new FormatoTablaAreas();
-		table22.setDefaultRenderer(Object.class, formatoTablaAreas);
-		
-		table22.setBounds(5, 17, 240, 417);
-		table22.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table22.getColumnModel().getColumn(0).setPreferredWidth(150);
-		table22.getColumnModel().getColumn(1).setPreferredWidth(90);
-		JScrollPane scrollPane2 = new JScrollPane(table22);
-		panel2.add(scrollPane2, BorderLayout.CENTER);
 
 		JPanel panel1 = new JPanel();
-		panel1.setBounds(10, 10, 402, 390);
+		panel1.setBounds(10, 10, 602, 390);
 		panel1.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black),
 				"Lista Seleccionada", TitledBorder.LEFT, TitledBorder.TOP));
@@ -70,20 +50,12 @@ public class SeleccionEspecificaFormuladores {
 		
 		table11 = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Eliminar"}, 0));
 		
-		FormatoTablaFormuladores formatoTablaformuladores = new FormatoTablaFormuladores(participantesBuscar);
-		table11.setDefaultRenderer(Object.class, formatoTablaformuladores);
-		
 		table11.getColumnModel().getColumn(0).setMinWidth(70);
-		table11.getColumnModel().getColumn(1).setMinWidth(110);
-		table11.getColumnModel().getColumn(2).setMinWidth(110);
+		table11.getColumnModel().getColumn(1).setMinWidth(200);
+		table11.getColumnModel().getColumn(2).setMinWidth(200);
 		table11.getColumnModel().getColumn(3).setMinWidth(100);
 		
 		model = (DefaultTableModel) table11.getModel();
-		modelAreas = (DefaultTableModel) table22.getModel();
-		
-		for (int i = 0; i < areas.size(); i++) {
-			areas.get(i).set(2, 0);
-		}
 		
 		for (int i = 0; i < participantesBuscar.size(); i++) {
 			if (!participantesBuscar.get(i).isBuscar()) {
@@ -93,22 +65,7 @@ public class SeleccionEspecificaFormuladores {
 						participantesBuscar.get(i).getApellido_participante(),
 						"Eliminar"
 						});
-				
-				for (int j = 0; j < areas.size(); j++) {
-					if (participantesBuscar.get(i).getId_especialidad().equals(areas.get(j).get(0).toString()))
-						areas.get(j).set(2, Integer.parseInt(areas.get(j).get(2).toString()) + 1);
-				}
 			}
-		}
-		
-		while (modelAreas.getRowCount() > 0)
-			modelAreas.removeRow(0);
-		
-		for (int j = 0; j < areas.size(); j++) {
-			modelAreas.addRow(new Object[] {
-					areas.get(j).get(0).toString(),
-					Integer.parseInt(areas.get(j).get(1).toString()) - Integer.parseInt(areas.get(j).get(2).toString()),
-					});
 		}
 		
 		Action eliminar = new AbstractAction() {
@@ -121,22 +78,6 @@ public class SeleccionEspecificaFormuladores {
 		    	for (int i = 0; i < participantesBuscar.size(); i++) {
 					if (participantesBuscar.get(i).getDni_participante().equals(model.getValueAt(modelRow, 0))) {
 						participantesBuscar.get(i).setBuscar(true);
-						
-						for (int j = 0; j < areas.size(); j++) {
-							System.out.println(areas.get(j).get(0).toString());
-							if (participantesBuscar.get(i).getId_especialidad().equals(areas.get(j).get(0).toString()))
-								areas.get(j).set(2, Integer.parseInt(areas.get(j).get(2).toString()) - 1);
-						}
-						
-						while (modelAreas.getRowCount() > 0)
-							modelAreas.removeRow(0);
-						
-						for (int j = 0; j < areas.size(); j++) {
-							modelAreas.addRow(new Object[] {
-									areas.get(j).get(0).toString(),
-									Integer.parseInt(areas.get(j).get(1).toString()) - Integer.parseInt(areas.get(j).get(2).toString()),
-									});
-						}
 					}
 				}
 		    	
@@ -188,10 +129,9 @@ public class SeleccionEspecificaFormuladores {
 		JButton Button31 = new JButton("Buscar");
 		Button31.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BuscarFormuladores buscar = new BuscarFormuladores();
-				buscar.buscar(participantesBuscar, areas);
-				buscar.frame.setVisible(true);
-				Main.centralizar(buscar.frame);
+				BuscarTecnicos buscarTecnicos = new BuscarTecnicos(participantesBuscar, capacidad);
+				buscarTecnicos.frame.setVisible(true);
+				Main.centralizar(buscarTecnicos.frame);
 				frame.dispose();
 			}
 		});
@@ -245,21 +185,6 @@ public class SeleccionEspecificaFormuladores {
 								participantesBuscar.get(i).getApellido_participante(),
 								"Eliminar"
 								});
-						
-						for (int j = 0; j < areas.size(); j++) {
-							if (participantesBuscar.get(i).getId_especialidad().equals(areas.get(j).get(0).toString()))
-								areas.get(j).set(2, Integer.parseInt(areas.get(j).get(2).toString()) + 1);
-						}
-						
-						while (modelAreas.getRowCount() > 0)
-							modelAreas.removeRow(0);
-						
-						for (int j = 0; j < areas.size(); j++) {
-							modelAreas.addRow(new Object[] {
-									areas.get(j).get(0).toString(),
-									Integer.parseInt(areas.get(j).get(1).toString()) - Integer.parseInt(areas.get(j).get(2).toString()),
-									});
-						}
 					}
 				}
 				
