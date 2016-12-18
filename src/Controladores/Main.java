@@ -9,7 +9,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Conexion conn = new Conexion();
-		conn.nuevo();
+//		conn.nuevo();
 		Login login = new Login();
 		centralizar(login.frmExaminV);
 		login.frmExaminV.setVisible(true);

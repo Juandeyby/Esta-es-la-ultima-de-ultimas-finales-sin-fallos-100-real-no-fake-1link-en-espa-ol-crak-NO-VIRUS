@@ -1,6 +1,7 @@
 package Controladores;
 import java.sql.Connection;
 
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,9 @@ import Clases.ParticipanteOut;
 import Clases.Participante;
 import Clases.ParticipanteBuscar;
 import Clases.Historial;
+import Clases.HistorialOut;
 import Clases.ParticipantePDF;
+import Clases.ParticipantePromedio;
 import Clases.Usuario;
 
 public class Conexion {
@@ -1023,6 +1026,61 @@ public class Conexion {
 		}
 		return participante;
 	}
+	
+	public ParticipanteOut mostrarParticipante (String dni_participante) {
+		
+		Connection conn = null;
+		PreparedStatement prestat = null;
+		ResultSet pw = null;
+		ParticipanteOut participanteTemp = null;
+		
+		try {
+			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+		} catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:derby:.\\DB\\Derby.DB;create=true");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	
+		try {
+			prestat = conn.prepareStatement("SELECT * FROM participante, especialidad, tipo_participante, funcion "
+					+ "WHERE participante.id_funcion = funcion.id_funcion "
+					+ "AND participante.id_funcion = especialidad.id_especialidad "
+					+ "AND participante.id_tipo_participante = tipo_participante.id_tipo_participante "
+					+ "AND participante.dni_participante = '" + dni_participante + "'");
+			pw = prestat.executeQuery();
+			
+			while (pw.next()) {
+				participanteTemp = new ParticipanteOut(
+						pw.getString("dni_participante"),
+						refinar(pw.getString("nombre_participante")),
+						refinar(pw.getString("apellido_participante")),
+						refinar(pw.getString("telefono_participante")),
+						pw.getInt("telefono_oficina_participante"),
+						pw.getInt("celular_participante"),
+						refinar(pw.getString("correo_participante")),
+						refinar(pw.getString("correo_institucional_participante")),
+						refinar(pw.getString("direccion_participante")),
+						pw.getBoolean("estado_participante"),
+						refinar(pw.getString("id_facultad")),
+						refinar(pw.getString("nombre_especialidad")),
+						refinar(pw.getString("id_tipo_condicion")),
+						refinar(pw.getString("nombre_funcion")),
+						refinar(pw.getString("nombre_tipo_participante")));
+			}
+			System.out.println(pw);
+			conn.close();
+			prestat.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return participanteTemp;
+	}
 
 	public ArrayList<ParticipanteOut> mostrar () {
 		
@@ -1074,6 +1132,58 @@ public class Conexion {
 			e.printStackTrace();
 		}
 		return participantes;
+	}
+	
+	public ArrayList<HistorialOut> mostrarHistorial () {
+		
+		Connection conn = null;
+		PreparedStatement prestat = null;
+		ResultSet pw = null;
+		ArrayList<HistorialOut> historiales = new ArrayList<HistorialOut>();
+		
+		try {
+			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+		} catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:derby:.\\DB\\Derby.DB;create=true");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	
+		try {
+			prestat = conn.prepareStatement("SELECT * FROM historial_proceso, tipo_proceso, fase_proceso, cargo_proceso "
+					+ "WHERE historial_proceso.id_tipo_proceso = tipo_proceso.id_tipo_proceso "
+					+ "AND historial_proceso.id_fase_proceso = fase_proceso.id_fase_proceso "
+					+ "AND historial_proceso.id_cargo_proceso = cargo_proceso.id_cargo_proceso");
+			pw = prestat.executeQuery();
+			
+			while (pw.next()) {
+				HistorialOut historialTemp = new HistorialOut(
+						pw.getString("dni_participante"),
+						refinar(pw.getString("nombre_tipo_proceso")),
+						refinar(pw.getString("nombre_fase_proceso")),
+						pw.getInt("anio_proceso"),
+						refinar(pw.getString("nombre_cargo_proceso")),
+						pw.getInt("experiencia_historial_proceso"),
+						refinar(pw.getString("observacion_historial_proceso"))
+						);
+				historiales.add(historialTemp);
+			}
+			
+			for (int i = 0; i < historiales.size(); i++) {
+				System.out.println(historiales.get(i).toString());
+			}
+			
+			conn.close();
+			prestat.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return historiales;
 	}
 	
 	public void insertarParticipante (Participante participante) {
@@ -1133,7 +1243,6 @@ public class Conexion {
 		
 		Connection conn = null;
 		PreparedStatement prestat = null;
-		ResultSet pw = null;
 		
 		try {
 			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
@@ -1162,21 +1271,6 @@ public class Conexion {
 					+ " '" + historial.getObservacion_historial_proceso() + "' "
 					+ ")");
 			System.out.println(prestat.executeUpdate());
-			
-			prestat = conn.prepareStatement("SELECT * FROM historial_proceso");
-			pw = prestat.executeQuery();
-			
-			while (pw.next()) {
-				System.out.println(
-						pw.getString("dni_participante") + "\t"
-						+ pw.getInt("id_tipo_proceso") + "\t"
-						+ pw.getInt("id_fase_proceso") + "\t"
-						+ pw.getInt("anio_proceso") + "\t"
-						+ pw.getInt("id_cargo_proceso") + "\t"
-						+ pw.getInt("experiencia_historial_proceso") + "\t"
-						+ refinar(pw.getString("observacion_historial_proceso"))
-						);
-			}
 			
 			conn.close();
 			prestat.close();
@@ -1339,5 +1433,28 @@ public ArrayList<ParticipantePDF> mostrarNuevo() {
 			i--;
 		}
 		return str.substring(0, i+1);
+	}
+	
+	public List<ParticipantePromedio> experienciaPromedio(List<HistorialOut> historialOut) {
+		List<ParticipantePromedio> participantesPromedio = new ArrayList<ParticipantePromedio>();
+		for (int i = 0; i < historialOut.size(); i++) {
+			int repetidos = 0;
+			double total = 0;
+			for (int j = 0; j < historialOut.size(); j++) {
+				if (historialOut.get(i).getDni_participante().equals(historialOut.get(j).getDni_participante())) {
+					repetidos++;
+					total += historialOut.get(j).getExperiencia_historial_proceso(); 
+				}
+			}
+			ParticipantePromedio participanteTemp = new ParticipantePromedio(
+					mostrarParticipante(historialOut.get(i).getDni_participante()), total / repetidos);
+			participantesPromedio.add(participanteTemp);
+			for (int j = 0; j < historialOut.size(); j++) {
+				if (historialOut.get(i).getDni_participante().equals(historialOut.get(j).getDni_participante())) {
+					historialOut.remove(j); 
+				}
+			}
+		}
+		return participantesPromedio;
 	}
 }
