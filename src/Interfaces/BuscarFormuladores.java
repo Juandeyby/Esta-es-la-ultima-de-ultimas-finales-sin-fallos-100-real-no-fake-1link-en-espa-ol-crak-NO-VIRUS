@@ -148,8 +148,6 @@ public class BuscarFormuladores {
 		
 		tableParticipantes = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Especialidad", "Agregar"}, 0));
 		
-		ArrayList<Integer> direcciones = new ArrayList<Integer>();
-		
 		modelParticipantes = (DefaultTableModel) tableParticipantes.getModel();
 
 		conn = new Conexion();
@@ -185,24 +183,29 @@ public class BuscarFormuladores {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				int total = 0;
-				for (int i = 0; i < areas.size(); i++) {
-					total += Integer.parseInt(areas.get(i).get(1).toString());
-				}
-				
-				int seleccionados = 0;
-				for (int i = 0; i < participantesBuscar.size(); i++) {
-					if (!participantesBuscar.get(i).isBuscar())
-						seleccionados++;
-				}
-				
-				if (total - seleccionados == 0) {
-					JOptionPane.showMessageDialog(null, "Excedio Cantidad");
-					return;
-				}
 				
 		        int modelRow = Integer.valueOf(e.getActionCommand());
-		    	direcciones.add(modelRow);
+		        
+		        int seleccionados = 0;
+				for (int i = 0; i < participantesBuscar.size(); i++) {
+					if (!participantesBuscar.get(i).isBuscar()
+							&& participantesBuscar.get(i).getId_especialidad().equals(modelParticipantes.getValueAt(modelRow, 3).toString()))
+						seleccionados++;
+				}
+		        
+				int area = 0;
+				while (area < areas.size()) {
+					if (areas.get(area).get(0).equals(modelParticipantes.getValueAt(modelRow, 3).toString())) {
+						break;
+					}
+					area++;
+				}
+				
+		        if (Integer.parseInt(areas.get(area).get(1).toString()) - seleccionados == 0) {
+		        	JOptionPane.showMessageDialog(null, "Excedio Cantidad de " + modelParticipantes.getValueAt(modelRow, 3).toString() + ".");
+					return;
+		        }
+		        
 		    	modelSeleccionados.addRow(new Object[] {
 						modelParticipantes.getValueAt(modelRow, 0),
 						modelParticipantes.getValueAt(modelRow, 1),

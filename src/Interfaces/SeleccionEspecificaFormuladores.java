@@ -242,33 +242,19 @@ public class SeleccionEspecificaFormuladores {
 					});
 				}
 				
-				for (int i = 0; i < participantesPromedios.size(); i++) {
-					System.out.println(participantesPromedios.get(i).toString());
-				}
-				
-				int total = 0;
-				for (int i = 0; i < areas.size(); i++) {
-					total += Integer.parseInt(areas.get(i).get(1).toString());
-				}
-				
-				int seleccionados = 0;
-				for (int i = 0; i < participantesBuscar.size(); i++) {
-					if (!participantesBuscar.get(i).isBuscar())
-						seleccionados++;
-				}
+//				for (int i = 0; i < participantesPromedios.size(); i++) {
+//					System.out.println(participantesPromedios.get(i).toString());
+//				}
 				
 				int control = Integer.parseInt(textField.getText());
-				
-				if (total - seleccionados < Integer.parseInt(textField.getText())) {
-					control = total - seleccionados;
-				}
 				
 				for (int i = 0; i < participantesPromedios.size(); i++) {
 					if (control == 0)
 						break;
 					for (int j = 0; j < participantesBuscar.size(); j++) {
 						if (participantesPromedios.get(i).getDni_participante().equals(participantesBuscar.get(j).getDni_participante())
-								&& participantesBuscar.get(j).isBuscar()) {
+								&& participantesBuscar.get(j).isBuscar()
+								&& buscarAreas(participantesBuscar.get(j), areas)) {
 							participantesBuscar.get(j).setBuscar(false);
 							control--;
 							break;
@@ -310,23 +296,42 @@ public class SeleccionEspecificaFormuladores {
 					if (!participantesBuscar.get(i).isBuscar())
 						seleccionados++;
 				}
+				
 				// no debe susperar el numero de faltantes de la base de datos
 				for (int j = 0; j < total - seleccionados; j++) {
-					System.out.println(j);
 					int random = (int) (Math.random()*(participantesBuscar.size()));
-					if (!participantesBuscar.get(random).isBuscar())
+					if (!participantesBuscar.get(random).isBuscar() && participantesBuscar.get(random).isVisto())
 						j--;
 					else {
 						int k;
 						for (k = 0; k < historialOut.size(); k++) {
 							if (historialOut.get(k).getDni_participante().equals(participantesBuscar.get(random).getDni_participante())) {
+								participantesBuscar.get(random).setVisto(true);
 								j--;
 								break;
 							}
 						}
 						if (k == historialOut.size()) {
-							participantesBuscar.get(random).setBuscar(false);
+							if (buscarAreas(participantesBuscar.get(random), areas))
+								participantesBuscar.get(random).setBuscar(false);
+							else {
+								j--;
+								participantesBuscar.get(random).setVisto(true);
+							}
 						}
+					}
+					
+					boolean vistoTodos = true;
+					for (int i = 0; i < participantesBuscar.size(); i++) {
+						if (!participantesBuscar.get(i).isVisto()) {
+							vistoTodos = false;
+							break;
+						}
+					}
+					
+					if (vistoTodos) {
+						JOptionPane.showMessageDialog(null, "Participantes insuficientes para cubrir");
+						return;
 					}
 				}
 				
@@ -348,5 +353,18 @@ public class SeleccionEspecificaFormuladores {
 		});
 		btnRegresar.setBounds(325, 410, 150, 25);
 		frame.getContentPane().add(btnRegresar);
+	}
+	
+	public boolean buscarAreas (ParticipanteBuscar participanteBuscar, ArrayList<ArrayList<Object>> areas) {
+		for (int i = 0; i < areas.size(); i++) {
+			if (areas.get(i).get(0).toString().equals(participanteBuscar.getId_especialidad())) {
+				if (Integer.parseInt(areas.get(i).get(1).toString()) == Integer.parseInt(areas.get(i).get(2).toString()))
+					return false;
+				else
+					areas.get(i).set(2, Integer.parseInt(areas.get(i).get(2).toString()) + 1);
+				break;
+			}
+		}
+		return true;
 	}
 }
