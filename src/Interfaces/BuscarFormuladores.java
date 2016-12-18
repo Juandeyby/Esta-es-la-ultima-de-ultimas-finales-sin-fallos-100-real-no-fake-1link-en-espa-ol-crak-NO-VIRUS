@@ -73,7 +73,7 @@ public class BuscarFormuladores {
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black),
 				"Resultados", TitledBorder.LEFT, TitledBorder.TOP));
 		
-		JTable tableSeleccionados = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Especialidad", "Agregar"}, 0));
+		JTable tableSeleccionados = new JTable(new DefaultTableModel(new Object[]{"DNI", "Nombre", "Apellido", "Especialidad", "Eliminar"}, 0));
 		
 		modelSeleccionados = (DefaultTableModel) tableSeleccionados.getModel();
 
@@ -185,6 +185,22 @@ public class BuscarFormuladores {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
+				int total = 0;
+				for (int i = 0; i < areas.size(); i++) {
+					total += Integer.parseInt(areas.get(i).get(1).toString());
+				}
+				
+				int seleccionados = 0;
+				for (int i = 0; i < participantesBuscar.size(); i++) {
+					if (!participantesBuscar.get(i).isBuscar())
+						seleccionados++;
+				}
+				
+				if (total - seleccionados == 0) {
+					JOptionPane.showMessageDialog(null, "Excedio Cantidad");
+					return;
+				}
+				
 		        int modelRow = Integer.valueOf(e.getActionCommand());
 		    	direcciones.add(modelRow);
 		    	modelSeleccionados.addRow(new Object[] {
@@ -193,6 +209,7 @@ public class BuscarFormuladores {
 						modelParticipantes.getValueAt(modelRow, 2),
 						modelParticipantes.getValueAt(modelRow, 3),
 						"Eliminar"});
+
 		    	for (int i = 0; i < participantesBuscar.size(); i++) {
 					if (participantesBuscar.get(i).getDni_participante().equals(modelParticipantes.getValueAt(modelRow, 0)))
 						participantesBuscar.get(i).setBuscar(false);
@@ -223,7 +240,7 @@ public class BuscarFormuladores {
 
 		JButton btnRegresar = new JButton("Agregar");
 		btnRegresar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
 				SeleccionEspecificaFormuladores seleccionEspecificaFormuladores = new SeleccionEspecificaFormuladores(participantesBuscar, areas);
 				seleccionEspecificaFormuladores.frame.setVisible(true);
 				Main.centralizar(seleccionEspecificaFormuladores.frame);
