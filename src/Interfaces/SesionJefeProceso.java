@@ -668,7 +668,7 @@ public class SesionJefeProceso {
 		
 		JButton btnExportar = new JButton("Exportar Listas");
 		btnExportar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {	
 				Exportar exportar = new Exportar();
 				Main.centralizar(exportar.frame);
 				exportar.frame.setVisible(true);
@@ -684,6 +684,9 @@ public class SesionJefeProceso {
 		btnDdd.setBackground(new Color(77, 1, 33));
 		btnDdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Window enviar = new Window();
+				Main.centralizar(enviar.frame);
+				enviar.frame.setVisible(true);
 			}
 		});
 		btnDdd.setBounds(410, 466, 150, 25);

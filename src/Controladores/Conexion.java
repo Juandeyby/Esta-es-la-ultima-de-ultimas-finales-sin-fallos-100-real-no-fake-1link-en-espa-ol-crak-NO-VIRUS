@@ -504,7 +504,7 @@ public class Conexion {
 				System.out.println(prestat.executeUpdate());
 				
 				prestat = conn.prepareStatement("INSERT INTO especialidad (nombre_especialidad)"
-						+ " VALUES ('SINFUNCION')");
+						+ " VALUES ('SINESPECIALIDAD')");
 				System.out.println(prestat.executeUpdate());
 				
 				//Facultad
@@ -985,16 +985,13 @@ public class Conexion {
 			e1.printStackTrace();
 		}
 		
-//		Tabla entidad_tipo_participante
-//		prestat = conn.prepareStatement("CREATE TABLE tipo_participante"
-//				+ "("
-//				+ "  id_tipo_participante Int NOT NULL primary key GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1),"
-//				+ "  nombre_tipo_participante char(50) NOT NULL"
-//				+ ") ");
-//		System.out.println(prestat.executeUpdate());
-		
 		try {
-			prestat = conn.prepareStatement("SELECT * FROM participante, tipo_participante, funcion WHERE participante.dni_participante = '"+ dni_participante + "' AND funcion.nombre_funcion = '" + funcion + "' AND tipo_participante.nombre_tipo_participante = '" + tipo_participante +"'");
+			prestat = conn.prepareStatement("SELECT * FROM participante, tipo_participante, funcion, facultad, especialidad "
+					+ "WHERE participante.dni_participante = '"+ dni_participante + "' "
+					+ "AND funcion.nombre_funcion = '" + funcion + "' "
+					+ "AND facultad.id_facultad = participante.id_facultad "
+					+ "AND especialidad.id_especialidad = participante.id_especialidad "
+					+ "AND tipo_participante.nombre_tipo_participante = '" + tipo_participante +"'");
 			pw = prestat.executeQuery();
 			
 			while (pw.next()) {
@@ -1002,15 +999,15 @@ public class Conexion {
 						pw.getString("dni_participante"),
 						refinar(pw.getString("nombre_participante")),
 						refinar(pw.getString("apellido_participante")),
-						refinar(pw.getString("telefono_participante")),
+						refinar(pw.getString("telefono_participante")).equals("null") ? "--" : refinar(pw.getString("telefono_participante")),
 						pw.getInt("telefono_oficina_participante"),
 						pw.getInt("celular_participante"),
-						refinar(pw.getString("correo_participante")),
-						refinar(pw.getString("correo_institucional_participante")),
-						refinar(pw.getString("direccion_participante")),
+						refinar(pw.getString("correo_participante")).equals("--") ? "null" : refinar(pw.getString("correo_participante")),
+						refinar(pw.getString("correo_institucional_participante")).equals("--") ? "null" : refinar(pw.getString("correo_institucional_participante")),
+						refinar(pw.getString("direccion_participante")).equals("null") ? "--" : refinar(pw.getString("direccion_participante")),
 						pw.getBoolean("estado_participante"),
-						refinar(pw.getString("id_facultad")),
-						refinar(pw.getString("id_especialidad")),
+						refinar(pw.getString("nombre_facultad")),
+						refinar(pw.getString("nombre_especialidad")),
 						refinar(pw.getString("id_tipo_condicion")),
 						refinar(pw.getString("nombre_funcion")),
 						refinar(pw.getString("nombre_tipo_participante")));
@@ -1158,6 +1155,59 @@ public class Conexion {
 					+ "WHERE historial_proceso.id_tipo_proceso = tipo_proceso.id_tipo_proceso "
 					+ "AND historial_proceso.id_fase_proceso = fase_proceso.id_fase_proceso "
 					+ "AND historial_proceso.id_cargo_proceso = cargo_proceso.id_cargo_proceso");
+			pw = prestat.executeQuery();
+			
+			while (pw.next()) {
+				HistorialOut historialTemp = new HistorialOut(
+						pw.getString("dni_participante"),
+						refinar(pw.getString("nombre_tipo_proceso")),
+						refinar(pw.getString("nombre_fase_proceso")),
+						pw.getInt("anio_proceso"),
+						refinar(pw.getString("nombre_cargo_proceso")),
+						pw.getInt("experiencia_historial_proceso"),
+						refinar(pw.getString("observacion_historial_proceso"))
+						);
+				historiales.add(historialTemp);
+			}
+			
+			for (int i = 0; i < historiales.size(); i++) {
+				System.out.println(historiales.get(i).toString());
+			}
+			
+			conn.close();
+			prestat.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return historiales;
+	}
+	
+	public ArrayList<HistorialOut> mostrarHistorial (String dni_participante) {
+		
+		Connection conn = null;
+		PreparedStatement prestat = null;
+		ResultSet pw = null;
+		ArrayList<HistorialOut> historiales = new ArrayList<HistorialOut>();
+		
+		try {
+			Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+		} catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:derby:.\\DB\\Derby.DB;create=true");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	
+		try {
+			prestat = conn.prepareStatement("SELECT * FROM historial_proceso, tipo_proceso, fase_proceso, cargo_proceso "
+					+ "WHERE historial_proceso.id_tipo_proceso = tipo_proceso.id_tipo_proceso "
+					+ "AND historial_proceso.id_fase_proceso = fase_proceso.id_fase_proceso "
+					+ "AND historial_proceso.id_cargo_proceso = cargo_proceso.id_cargo_proceso "
+					+ "AND historial_proceso.dni_participante = '" + dni_participante + "'");
 			pw = prestat.executeQuery();
 			
 			while (pw.next()) {
@@ -1377,7 +1427,7 @@ public static  boolean eliminar() {
 	}
 
 
-public ArrayList<ParticipantePDF> mostrarNuevo() {
+public ArrayList<ParticipantePDF> mostrarNuevo(int cod) {
 	
 	Connection conn = null;
 	PreparedStatement prestat = null;
@@ -1397,18 +1447,89 @@ public ArrayList<ParticipantePDF> mostrarNuevo() {
 	}
 
 	try {
-		prestat = conn.prepareStatement("SELECT dni_participante, nombre_participante, "
-				+ "apellidos_participante, nombre_cargo_proceso FROM participante, "
-				+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
-				+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso ");
-		pw = prestat.executeQuery();
+		switch(cod){
+		case 0:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "lista_detalle.id_lista_cabecera = lista_cabecera.id_lista_cabecera AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso");
+			pw = prestat.executeQuery();
+			break;
+		case 1:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso AND cargo_proceso.nombre_cargo_proceso = 'FORMULADOR'");
+			pw = prestat.executeQuery();
+			break;
+		case 2:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso AND cargo_proceso.nombre_cargo_proceso = 'TECNICO'");
+			pw = prestat.executeQuery();
+			break;
+		case 3:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso AND cargo_proceso.nombre_cargo_proceso = 'CONTROLADOR'");
+			pw = prestat.executeQuery();
+			break;
+		case 4:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso AND cargo_proceso.nombre_cargo_proceso = 'CONTADOR'");
+			pw = prestat.executeQuery();
+			break;
+		case 5:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso AND cargo_proceso.nombre_cargo_proceso = 'CONSERJE'");
+			pw = prestat.executeQuery();
+			break;
+		case 6:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso AND cargo_proceso.nombre_cargo_proceso = 'PORTERO'");
+			pw = prestat.executeQuery();
+			break;
+		case 7:
+			prestat = conn.prepareStatement("SELECT * FROM participante, lista_cabecera, fase_proceso, tipo_proceso, "
+					+ "cargo_proceso, lista_detalle WHERE participante.dni_participante = lista_detalle.dni_participante "
+					+ "AND cargo_proceso.id_cargo_proceso = lista_detalle.id_cargo_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "fase_proceso.id_fase_proceso = lista_cabecera.id_fase_proceso AND "
+					+ "tipo_proceso.id_tipo_proceso = lista_cabecera.id_tipo_proceso AND cargo_proceso.nombre_cargo_proceso = 'REVISADOR'");
+			pw = prestat.executeQuery();
+			break;
+		}
 		
 		while (pw.next()) {
 			ParticipantePDF participanteTemp = new ParticipantePDF(
-					pw.getString("dni_participante"),
+					pw.getString("dni_participante"),	
 					refinar(pw.getString("nombre_participante")),
 					refinar(pw.getString("apellido_participante")),
-					refinar(pw.getString("nombre_cargo_proceso")));
+					refinar(pw.getString("nombre_cargo_proceso")),
+					refinar(pw.getString("nombre_tipo_proceso")),
+					refinar(pw.getString("nombre_fase_proceso")));
 			participantes.add(participanteTemp);
 		}
 		System.out.println(pw);

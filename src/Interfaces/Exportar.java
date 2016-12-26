@@ -2,7 +2,6 @@ package Interfaces;
 
 import java.awt.EventQueue;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -28,6 +27,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.LineBorder;
 import javax.swing.JTextArea;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,7 +40,9 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JTextField;
+
 import java.awt.SystemColor;
 
 
@@ -54,14 +56,9 @@ public class Exportar {
 	private JCheckBox chckbxSleccionarTodo;
 	private JLabel lblOpciones; 
 	private JRadioButton radio_tbn_tecnicos,radio_btn_formuladores, radio_btn_controladores,radio_btn_contadores,
-	radio_btn_porteros,radio_btn_control_puerta,radio_btn_conserjes;
+	radio_btn_porteros,radio_btn_verificadores,radio_btn_conserjes;
 
-	ExportarPDF a=new ExportarPDF();
-
-	public static void main(String[] args) {
-		Exportar frame = new Exportar();
-		frame.frame.setVisible(true);
-	}
+	ExportarPDF a = new ExportarPDF();
 
 	public Exportar() {
 
@@ -74,21 +71,38 @@ public class Exportar {
 		frame.setContentPane(contentPane);
 
 		lblOpciones = new JLabel("Opciones");
-		lblOpciones.setBounds(32, 13, 70, 15);
+		lblOpciones.setBounds(12, 13, 137, 15);
 
 
 
 		chckbxSleccionarTodo = new JCheckBox("Seleccionar todo");
-		chckbxSleccionarTodo.setBounds(32, 35, 175, 23);
+		chckbxSleccionarTodo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(chckbxSleccionarTodo.isSelected() == true){
+					radio_btn_formuladores.setEnabled(false);
+					radio_tbn_tecnicos.setEnabled(false);
+					radio_btn_controladores.setEnabled(false);
+					radio_btn_contadores.setEnabled(false);
+					radio_btn_conserjes.setEnabled(false);
+					radio_btn_porteros.setEnabled(false);
+					radio_btn_verificadores.setEnabled(false);
+				} else {
+					radio_btn_formuladores.setEnabled(true);
+					radio_tbn_tecnicos.setEnabled(true);
+					radio_btn_controladores.setEnabled(true);
+					radio_btn_contadores.setEnabled(true);
+					radio_btn_conserjes.setEnabled(true);
+					radio_btn_porteros.setEnabled(true);
+					radio_btn_verificadores.setEnabled(true);
+				}
+			}
+		});
+		chckbxSleccionarTodo.setBounds(12, 35, 195, 23);
 		contentPane.setLayout(null);
-
-		if(chckbxSleccionarTodo.isSelected()==true){
-			chckbxSleccionarTodo.add(radio_btn_conserjes);
-		}
 
 
 		panel = new JPanel();
-		panel.setBounds(32, 61, 458, 140);
+		panel.setBounds(12, 61, 498, 163);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.getContentPane().add(panel);
 
@@ -104,35 +118,35 @@ public class Exportar {
 		panel.add(radio_btn_formuladores);
 
 		radio_tbn_tecnicos = new JRadioButton("Tecnicos");
-		radio_tbn_tecnicos.setBounds(20, 57, 149, 23);
+		radio_tbn_tecnicos.setBounds(20, 60, 201, 23);
 		panel.add(radio_tbn_tecnicos);
 
 		radio_btn_controladores = new JRadioButton("Controladores");
-		radio_btn_controladores.setBounds(20, 84, 149, 23);
+		radio_btn_controladores.setBounds(20, 90, 201, 23);
 		panel.add(radio_btn_controladores);
 
 		radio_btn_contadores = new JRadioButton("Contadores");
-		radio_btn_contadores.setBounds(225, 30, 149, 23);
+		radio_btn_contadores.setBounds(225, 30, 265, 23);
 		panel.add(radio_btn_contadores);
 
 		radio_btn_conserjes = new JRadioButton("Conserjes");
-		radio_btn_conserjes.setBounds(225, 57, 149, 23);
+		radio_btn_conserjes.setBounds(225, 60, 265, 23);
 		panel.add(radio_btn_conserjes);
 
 		radio_btn_porteros = new JRadioButton("Porteros");
-		radio_btn_porteros.setBounds(225, 84, 149, 23);
+		radio_btn_porteros.setBounds(225, 90, 265, 23);
 		panel.add(radio_btn_porteros);
 
-		radio_btn_control_puerta = new JRadioButton("Controladores de puerta");
-		radio_btn_control_puerta.setBounds(225, 107, 213, 23);
-		panel.add(radio_btn_control_puerta);
+		radio_btn_verificadores = new JRadioButton("Verificadores");
+		radio_btn_verificadores.setBounds(225, 120, 265, 23);
+		panel.add(radio_btn_verificadores);
 
 
 		ButtonGroup g=new ButtonGroup();
 		g.add(radio_btn_formuladores);
 		g.add(radio_btn_conserjes);
 		g.add(radio_btn_contadores);
-		g.add(radio_btn_control_puerta);
+		g.add(radio_btn_verificadores);
 		g.add(radio_btn_porteros);
 		g.add(radio_tbn_tecnicos);
 		g.add(radio_btn_controladores);
@@ -141,7 +155,6 @@ public class Exportar {
 		btn_exportar = new JButton("Exportar");
 		btn_exportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
 				if(chckbxSleccionarTodo.isSelected()==true){	
 					enviarDatos(0);
 				}
@@ -163,15 +176,13 @@ public class Exportar {
 				else if(radio_btn_porteros.isSelected()==true){
 					enviarDatos(6);
 				}
-				else if(radio_btn_control_puerta.isSelected()==true){
+				else if(radio_btn_verificadores.isSelected()==true){
 					enviarDatos(7);
 				}
-				else{
-					System.out.println("Error en crear PDF.");
-				}
 			}
+
 		});
-		btn_exportar.setBounds(185, 212, 117, 25);
+		btn_exportar.setBounds(187, 236, 117, 25);
 		contentPane.add(lblOpciones);
 		contentPane.add(chckbxSleccionarTodo);
 		contentPane.add(btn_exportar);
@@ -180,7 +191,7 @@ public class Exportar {
 		txt_ruta.setForeground(SystemColor.window);
 		txt_ruta.setEditable(false);
 		txt_ruta.setEnabled(false);
-		txt_ruta.setBounds(167, 10, 188, 20);
+		txt_ruta.setBounds(167, 10, 343, 20);
 		contentPane.add(txt_ruta);
 		txt_ruta.setColumns(10);
 	}
@@ -199,7 +210,7 @@ public class Exportar {
 
 			PdfWriter.getInstance(doc, archivo).setInitialLeading(20);
 			doc.open();
-			a.crearPDF(archivo,doc, cod);
+			a.crearPDF(archivo,doc,cod);
 
 			JOptionPane.showMessageDialog(null, "pdf creado correctamente");
 			doc.close();

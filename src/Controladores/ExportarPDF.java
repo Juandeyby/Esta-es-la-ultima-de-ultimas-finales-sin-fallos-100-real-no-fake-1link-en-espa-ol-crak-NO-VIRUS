@@ -17,15 +17,41 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 
+import Clases.ParticipanteOut;
 import Clases.ParticipantePDF;
 
 public class ExportarPDF  {
 	
 
-	public void crearPDF(FileOutputStream archivo, Document doc, int cod) 
-{
+	public void crearPDF(FileOutputStream archivo, Document doc, int cod) {
 		try {
-
+			String cabecera = "";
+			switch(cod){
+			case 0:
+				cabecera = "SELECCIONADOS";
+				break;
+			case 1:
+				cabecera = "FORMULADORES";
+				break;
+			case 2:
+				cabecera = "TECNICOS";
+				break;
+			case 3:
+				cabecera = "CONTROLADORES";
+				break;
+			case 4:
+				cabecera = "CONTADORES";
+				break;
+			case 5:
+				cabecera = "CONSERJES";
+				break;
+			case 6:
+				cabecera = "PORTEROS";
+				break;
+			case 7:
+				cabecera = "VERIFICADOR";
+				break;
+			}
 			//agregando imagen
 			Image foto = Image.getInstance("./Imagenes/escudo.png");
 			foto.scaleToFit(50, 50);
@@ -53,7 +79,7 @@ public class ExportarPDF  {
 			doc.add(encabezado);
 
 			//seleccion
-			Paragraph sele=new Paragraph("SELECCIONADOS ",
+			Paragraph sele=new Paragraph(cabecera,
 					FontFactory.getFont("arial",15,Font.BOLD));
 
 			sele.setAlignment(Element.ALIGN_CENTER);
@@ -83,7 +109,7 @@ public class ExportarPDF  {
 			doc.add(new Paragraph(lineaa));	 
 			
 			Conexion conn = new Conexion();
-			ArrayList<ParticipantePDF> participantes = conn.mostrarNuevo();
+			ArrayList<ParticipantePDF> participantes = conn.mostrarNuevo(cod);
 
 			float [] f = {1, 2, 3, 3, 3};
 			PdfPTable tabla = new PdfPTable(f);

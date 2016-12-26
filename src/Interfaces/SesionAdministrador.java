@@ -272,10 +272,6 @@ public class SesionAdministrador {
 		table.setBounds(10, 11, 321, 134);
 		panel_1.add(scrollPane_1);
 		
-		table = new JTable();
-		table.setBounds(13, 23, 720, 335);
-		panel_1.add(table);
-		
 		frame.getContentPane().add(panel);
 		frame.getContentPane().add(panel);
 		frame.getContentPane().add(panel);
