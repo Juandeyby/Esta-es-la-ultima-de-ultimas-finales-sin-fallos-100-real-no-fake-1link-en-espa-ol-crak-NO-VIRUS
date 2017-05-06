@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri Apr 28 12:07:33 PET 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-015b-b588-2f9c-000005e830a0 
+on database directory /home/juandeyby/git/Esta-es-la-ultima-de-ultimas-finales-sin-fallos-100-real-no-fake-1link-en-espa-ol-crak-NO-VIRUS/.\DB\Derby.DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/home/juandeyby/git/Esta-es-la-ultima-de-ultimas-finales-sin-fallos-100-real-no-fake-1link-en-espa-ol-crak-NO-VIRUS/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_131-b11
+user.dir=/home/juandeyby/git/Esta-es-la-ultima-de-ultimas-finales-sin-fallos-100-real-no-fake-1link-en-espa-ol-crak-NO-VIRUS
+os.name=Linux
+os.arch=amd64
+os.version=4.8.0-46-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
